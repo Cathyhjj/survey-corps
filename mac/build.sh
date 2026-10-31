@@ -6,7 +6,6 @@ B=build; APP="$B/Survey Corps.app"
 rm -rf "$B"; mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources" "$B/AppIcon.iconset"
 
 swiftc -O "$PWD/SurveyCorps.swift" -o "$APP/Contents/MacOS/SurveyCorps"
-cp blade.wav "$APP/Contents/Resources/"  # Levi's sound, made by blade.py
 
 cat > "$APP/Contents/Info.plist" <<'EOF'
 <?xml version="1.0" encoding="UTF-8"?>
@@ -19,7 +18,6 @@ cat > "$APP/Contents/Info.plist" <<'EOF'
   <key>CFBundleShortVersionString</key><string>1.0</string>
   <key>CFBundleIconFile</key><string>AppIcon</string>
   <key>NSHighResolutionCapable</key><true/>
-  <key>NSMicrophoneUsageDescription</key><string>Push-to-talk dictation (Settings → Dictation).</string>
   <key>NSAppTransportSecurity</key><dict><key>NSAllowsLocalNetworking</key><true/></dict>
 </dict></plist>
 EOF
@@ -55,8 +53,8 @@ iconutil -c icns "$B/AppIcon.iconset" -o "$APP/Contents/Resources/$ICON.icns"
 plutil -replace CFBundleIconFile -string "$ICON" "$APP/Contents/Info.plist"
 fi
 
-# Signed with a fixed self-made certificate (if you made one), macOS keeps the app's permissions (Microphone,
-# Accessibility, Input Monitoring, Screen Recording) across rebuilds; ad-hoc signing loses them every build.
+# Signed with a fixed self-made certificate (if you made one), macOS keeps the app's Screen Recording permission
+# (Screenshot to Task) across rebuilds; ad-hoc signing loses it every build.
 # Make it once: Keychain Access → Certificate Assistant → Create a Certificate…, name "Survey Corps Signing",
 # Identity Type "Self Signed Root", Certificate Type "Code Signing".
 SIGN="Survey Corps Signing"
